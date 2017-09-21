@@ -30,15 +30,18 @@ public class Customer {
      * @return
      */
     public String statement(){
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
+        //int frequentRenterPoints = 0;
         Enumeration rentals = _rentals.elements();
         String result = "Rental Record for " + getName() +"\n";
 
         while(rentals.hasMoreElements()){
-            double thisAmount = 0;
+            //第四部分：去掉多余的临时变量,只更改过一次
+           // double thisAmount = 0;
             Rental each = (Rental) rentals.nextElement();
-            //对不同影片进行不同的计算方式
+            //第三部修改引用的地方
+            //thisAmount = amountFor(each);
+            //thisAmount = each.getCharge();
+            /*//对不同影片进行不同的计算方式
             switch (each.get_movie().get_priceCode()){
                 case Movie.REGULAR:
                     thisAmount += 2;
@@ -53,19 +56,64 @@ public class Customer {
                 case Movie.NEW_RELEASE:
                     thisAmount += each.get_daysRented()*3;
                     break;
-            }
-            frequentRenterPoints++;
+            }*/
+           // frequentRenterPoints += each.getFrequentRenterPoints();
 
-            if((each.get_movie().get_priceCode() == Movie.NEW_RELEASE)&&each.get_daysRented()>1)
-                frequentRenterPoints++;
-
-            result += "\t" + each.get_movie().get_title() +"\t"+String.valueOf(thisAmount)+"\n";
-            totalAmount += thisAmount;
+            result += "\t" + each.get_movie().get_title() +"\t"+String.valueOf(each.getCharge())+"\n";
         }
 
-        result += "Amount owed is "+String.valueOf(totalAmount)+"\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints)+ " frequent center points";
+        result += "Amount owed is "+String.valueOf(getTotalCharge())+"\n";
+        result += "You earned " + String.valueOf(getTotalFrequentRenterPoiont())+ " frequent center points";
 
         return result;
     }
+
+    private double getTotalCharge(){
+        double result = 0;
+        Enumeration retals = _rentals.elements();
+        while (retals.hasMoreElements()){
+            Rental each = (Rental) retals.nextElement();
+            result += each.getCharge();
+        }
+        return  result;
+    }
+
+    private int getTotalFrequentRenterPoiont(){
+        int result = 0;
+        Enumeration rentals = _rentals.elements();
+        while (rentals.hasMoreElements()){
+            Rental each = (Rental) rentals.nextElement();
+            result += each.getFrequentRenterPoints();
+        }
+        return  result;
+    }
+
+    /**
+     * 1.分解第一步：将case提取出来
+     * extra method
+     * @param aRental
+     * @return
+     */
+   /* private double amountFor(Rental aRental){
+        *//*double result = 0;
+        //对不同影片进行不同的计算方式
+        switch (aRental.get_movie().get_priceCode()){
+            case Movie.REGULAR:
+                result += 2;
+                if(aRental.get_daysRented() >2)
+                    result += (aRental.get_daysRented()-2)*1.5;
+                break;
+            case Movie.CHILDRENS:
+                result += 1.5;
+                if(aRental.get_daysRented() >3)
+                    result += (aRental.get_daysRented()-3)*1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                result += aRental.get_daysRented()*3;
+                break;
+        }
+        return result;*//*
+        return aRental.getCharge();
+    }*/
+
 }

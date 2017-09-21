@@ -36,4 +36,6 @@ public class Movie {
     public void set_priceCode(int _priceCode) {
         this._priceCode = _priceCode;
     }
+
+
 }
